@@ -53,5 +53,6 @@ export class WebsocketService {
   send(value: string) {
     console.log(this.connection);
     this.connection?.send(JSON.stringify({ event: 'message', data: value }));
+    
   }
 }
