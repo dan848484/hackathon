@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { ChatMessage } from 'src/models/app.model';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,10 @@ export class WebsocketService {
   isConnected: boolean = false;
   public connection?: WebSocket;
   private _message$ = new Subject<MessageEvent>();
+  private _name?: string;
+  get name() {
+    return this._name;
+  }
   get message$() {
     return this._message$.asObservable();
   }
@@ -44,7 +49,7 @@ export class WebsocketService {
     this.connection!.onclose = null;
   }
 
-  private onMessage(event: MessageEvent) {
+  private onMessage(event: MessageEvent<ChatMessage>) {
     console.log('受信');
     this.isConnected = false;
     this._message$.next(event);
@@ -53,5 +58,9 @@ export class WebsocketService {
   send(value: string) {
     console.log(this.connection);
     this.connection?.send(JSON.stringify({ event: 'message', data: value }));
+  }
+
+  registerUserName(name: string) {
+    this._name = name;
   }
 }

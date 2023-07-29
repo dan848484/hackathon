@@ -1,6 +1,7 @@
 <div class="container">
   <div class="wrapper">
     <h1>AI Powered Chat</h1>
-    <app-button [routerLink]="'/chat'">チャットを開始する</app-button>
+    <input type="text" [formControl]="nameControl" />
+    <app-button (click)="onClick()">チャットを開始する</app-button>
   </div>
 </div>
