@@ -1,24 +1,32 @@
-<div class="container">
-    <i class="icon-user icon" id="user"></i>
-    <p>明日の15時とかミーティングできますか？</p>
+<div class="container"  *ngFor="let c of chats">
+    <i class="icon-user icon" id="user" [ngStyle]="{ 'color': dynamicColor}"></i>
+    <div class="aaa">
+        <p>{{ name }}</p>
+        <p>{{c}}</p>
+    </div>
 </div>
 
 <div class="container AI">
     <i class="icon-robot icon"></i>
     <div class="aaa">
         <p class="Suggestion">Suggestion AI</p>
-        <p>{{ time }} にミーティングを設定しますか？ 予定に重複はありません。</p>
-        <app-button><i class="icon-calendar button"></i> 予定を作成</app-button>
+        <div *ngIf="operation == 'create_meeting'; else falseComponent">
+            <p>{{ time }} にミーティングを設定しますか？ 予定に重複はありません。</p>
+            <app-button><i class="icon-calendar button"></i> 予定を作成</app-button>
+        </div>
+        <ng-template #falseComponent>
+            <p>予定に重複があるようです。以下の日程が空いています。</p>
+            <p>・{{ time }}</p>
+            <p>・{{ time }}</p>
+            <p>・{{ time }}</p>
+        </ng-template>
     </div>
+
 </div>
 
-
-<form (submit)="onSubmit($event)" class="form">
-    <input type="text">
+<form (submit)="onSubmit($event)" class="form" placeholder="メッセージを入力">
+    <input type="text" [formControl]="control">
     <button type="submit"><i class="icon-send icon"></i></button>
 </form>
-<div class="chat" *ngFor="let c of chats">
-  {{ c }}
-</div>
-<input type="text" [formControl]="control" />
-<app-button (click)="sendSomething()">何か送って見る</app-button>
+
+
