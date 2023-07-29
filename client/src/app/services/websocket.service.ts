@@ -78,4 +78,8 @@ export class WebsocketService {
   registerUserName(name: string) {
     this._name = name;
   }
+  send(value: string) {
+    console.log(this.connection);
+    this.connection?.send(JSON.stringify({ event: 'message', data: value }));
+  }
 }
