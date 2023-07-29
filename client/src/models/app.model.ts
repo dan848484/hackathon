@@ -1,5 +1,5 @@
 export interface MessageBase {
-  type: 'chat' | 'openai';
+  type: 'chat' | 'openai' | 'suggested_schedule';
 }
 
 export interface ChatMessage extends MessageBase {
@@ -35,4 +35,10 @@ export interface OpenaiMessage extends MessageBase {
   day: number;
   hour: number;
   minutes: number;
+}
+
+export interface SuggestedScheduleMessage
+  extends Omit<OpenaiMessage, 'type' | 'operation'> {
+  type: 'suggested_schedule';
+  operation: 'create_meeting';
 }

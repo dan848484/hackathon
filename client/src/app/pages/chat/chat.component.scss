@@ -1,10 +1,11 @@
 $color: #f5f5f5;
 
-.container { 
-    display: flex;
-    margin: 10px auto;
-    align-items: center;
+.container {
+  display: flex;
+  margin: 10px auto;
+  align-items: center;
 
+<<<<<<< HEAD
     background-color: $color;
     border-color: #acacac;
     width: 800px;
@@ -21,13 +22,21 @@ $color: #f5f5f5;
 }
 
 .icon{
+=======
+  background-color: $color;
+  border-color: #acacac;
+  width: 1000px;
+  border-radius: 10px;
+  vertical-align: middle;
+  .icon {
+>>>>>>> fujisaki
     font-size: 30px;
     color: #a7a7a7;
-    margin: 10px;
+  }
 }
 
-#user{
-    color: #A38EF9;
+.Suggestion {
+  font-weight: bold;
 }
 
 form{
@@ -44,17 +53,52 @@ form{
 
 input{
     width: 740px;
+.icon {
+  font-size: 30px;
+  color: #a7a7a7;
+  margin: 10px;
 }
 
-.AI{
-    border: 1px solid #acacac;
-    box-shadow: 0px 10px 20px 0 rgba(0,0,0,0.25);
+#user {
+  color: #a38ef9;
 }
 
-.aaa{
-    margin: 10px 0px;
+form {
+  background-color: $color;
+  border-radius: 10px;
+  margin: 0 auto;
+  width: 1000px;
+
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
 }
 
-app-button{
-    margin: 10px 0px;
+input {
+  width: 940px;
+}
+
+.AI {
+  border: 1px solid #acacac;
+  box-shadow: 0px 10px 20px 0 rgba(0, 0, 0, 0.25);
+}
+
+.aaa {
+  margin: 10px 0px;
+  display: flex;
+  .user-name {
+    font-weight: bold;
+  }
+}
+
+.aaa-veresion2 {
+  margin: 10px 0px;
+  .Suggestion {
+    font-weight: bold;
+  }
+}
+
+app-button {
+  margin: 10px 0px;
 }

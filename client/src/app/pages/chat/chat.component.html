@@ -1,32 +1,66 @@
-<div class="container"  *ngFor="let c of chats">
-    <i class="icon-user icon" id="user" [ngStyle]="{ 'color': dynamicColor}"></i>
-    <div class="aaa">
-        <p>{{ name }}</p>
-        <p>{{c}}</p>
+<div
+  class="container"
+  *ngFor="let c of chats"
+  [style.background]="c.type == 'chat' ? '#f5f5f5' : 'transparent'"
+>
+  <div class="aaa" *ngIf="c.type == 'chat'; else openai">
+    <i
+      class="icon-user icon"
+      id="user"
+      [ngStyle]="{ color: c.user == 'dan' ? 'orange' : '#A38EF9' }"
+    ></i>
+    <div class="user">
+      <p class="user-name">{{ c.user }}</p>
+      <p>{{ c.message }}</p>
     </div>
-</div>
-
-<div class="container AI">
-    <i class="icon-robot icon"></i>
-    <div class="aaa">
+  </div>
+  <ng-template #openai>
+    <div class="container AI">
+      <i class="icon-robot icon"></i>
+      <div class="aaa-veresion2">
         <p class="Suggestion">Suggestion AI</p>
+<<<<<<< HEAD
         <div *ngIf="operation == 'create_meeting'; else falseComponent">
             <p>{{ time }} にミーティングを設定しますか？ 予定に重複はありません。</p>
             <app-button (click)="create_meeting()"><i class="icon-calendar button"></i> 予定を作成</app-button>
+=======
+        <div *ngIf="$any(c).operation == 'create_meeting'; else falseComponent">
+          <p>
+            {{
+              getDateString(
+                $any(c).year,
+                $any(c).month,
+                $any(c).day,
+                $any(c).hour,
+                $any(c).minutes
+              )
+            }}
+            にミーティングを設定しますか？
+          </p>
+          <p *ngIf="c.type == 'suggested_schedule'; else suggested">
+            (重複していたため、提案されたスケジュールです)
+          </p>
+
+          <ng-template #suggested>
+            <p>予定に重複はありません。</p>
+          </ng-template>
+          <app-button
+            ><i class="icon-calendar button"></i> 予定を作成</app-button
+          >
+>>>>>>> fujisaki
         </div>
         <ng-template #falseComponent>
-            <p>予定に重複があるようです。以下の日程が空いています。</p>
-            <p>・{{ time }}</p>
-            <p>・{{ time }}</p>
-            <p>・{{ time }}</p>
+          <!-- <p>予定に重複があるようです。以下の日程が空いています。</p>
+          <p>・{{ time }}</p>
+          <p>・{{ time }}</p>
+          <p>・{{ time }}</p> -->
         </ng-template>
+      </div>
     </div>
-
+  </ng-template>
 </div>
 
 <form (submit)="onSubmit($event)" class="form" placeholder="メッセージを入力">
-    <input type="text" [formControl]="control">
-    <button type="submit"><i class="icon-send icon"></i></button>
+  <input type="text" [formControl]="control" />
+  <button type="submit"><i class="icon-send icon"></i></button>
 </form>
-
-
