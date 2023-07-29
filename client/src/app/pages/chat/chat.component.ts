@@ -10,7 +10,7 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 export class ChatComponent implements OnInit {
   chats: string[] = [];
   constructor(private websocketService: WebsocketService) {}
-  send(value:string) {
+  send(value: string) {
     this.websocketService.send(value);
   }
   control = new FormControl('');
@@ -18,33 +18,29 @@ export class ChatComponent implements OnInit {
     this.websocketService.message$.subscribe((event) => {
       this.chats.push(event.data);
     });
-    if (this.name == "dan"){
-      this.dynamicColor = "orange";
+    if (this.name == 'dan') {
+      this.dynamicColor = 'orange';
     }
   }
 
+  name: string = 'dan';
+  dynamicColor: string = '';
 
-  name:string = "dan";
-  dynamicColor:string = "";
-  
-  operation = "create_meeting";
+  operation = 'create_meeting';
+  // operation = "AAA";
 
   year = 2022;
   month = 7;
   day = 30;
   hours = 15;
-  minits = 30
+  minits = 30;
 
   time = `${this.year}/${this.month}/${this.day} ${this.hours}:${this.minits}`;
-  
-  onSubmit(event:SubmitEvent){
+  onSubmit(event: SubmitEvent) {
     event.preventDefault();
-    if(this.control.value != "")
-    {
-      this.send(this.control.value??"");
-      this.control.setValue("");
+    if (this.control.value != '') {
+      this.send(this.control.value ?? '');
+      this.control.setValue('');
     }
   }
-
 }
-

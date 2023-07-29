@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { ChatMessage, OpenaiMessage } from 'src/models/app.model';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,10 @@ export class WebsocketService {
   isConnected: boolean = false;
   public connection?: WebSocket;
   private _message$ = new Subject<MessageEvent>();
+  private _name?: string;
+  get name() {
+    return this._name;
+  }
   get message$() {
     return this._message$.asObservable();
   }
@@ -44,15 +49,34 @@ export class WebsocketService {
     this.connection!.onclose = null;
   }
 
-  private onMessage(event: MessageEvent) {
-    console.log('受信');
+  private onMessage(event: MessageEvent<string>) {
+    console.log('受信', event);
+    const data: ChatMessage | OpenaiMessage = JSON.parse(event.data);
+    if (
+      data.type === 'openai' &&
+      data.targetUser[0] === '!' &&
+      data.targetUser.slice(1) === this.name
+    ) {
+      console.log('受け取らないイベント', event);
+    } else {
+      this._message$.next(event);
+    }
     this.isConnected = false;
-    this._message$.next(event);
+  }
+  sendChatMessage(value: string) {
+    const chatMsg: ChatMessage = {
+      type: 'chat',
+      user: this.name!,
+      message: value,
+    };
+    this.connection?.send(JSON.stringify({ event: 'message', data: chatMsg }));
   }
 
+  registerUserName(name: string) {
+    this._name = name;
+  }
   send(value: string) {
     console.log(this.connection);
     this.connection?.send(JSON.stringify({ event: 'message', data: value }));
-    
   }
 }
