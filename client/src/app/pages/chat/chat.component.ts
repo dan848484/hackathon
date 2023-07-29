@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { WebsocketService } from 'src/app/services/websocket.service';
+import {
+  ChatMessage,
+  OpenaiMessage,
+  SuggestedScheduleMessage,
+} from 'src/models/app.model';
 
 @Component({
   selector: 'app-chat',
@@ -8,34 +13,33 @@ import { WebsocketService } from 'src/app/services/websocket.service';
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit {
-  chats: string[] = [];
+  chats: (OpenaiMessage | ChatMessage | SuggestedScheduleMessage)[] = [];
   constructor(private websocketService: WebsocketService) {}
   send(value: string) {
-    this.websocketService.send(value);
+    this.websocketService.sendChatMessage(value);
   }
   control = new FormControl('');
   ngOnInit(): void {
     this.websocketService.message$.subscribe((event) => {
+      const data = event.data;
+
       this.chats.push(event.data);
+      console.log(this.chats);
     });
-    if (this.name == 'dan') {
-      this.dynamicColor = 'orange';
-    }
   }
 
-  name: string = 'dan';
-  dynamicColor: string = '';
-
-  operation = 'create_meeting';
-  // operation = "AAA";
-
-  year = 2022;
-  month = 7;
-  day = 30;
-  hours = 15;
-  minits = 30;
-
-  time = `${this.year}/${this.month}/${this.day} ${this.hours}:${this.minits}`;
+  getDateString(
+    year: number,
+    month: number,
+    day: number,
+    hours: number,
+    minutes: number
+  ) {
+    return `${year}/${String(month).padStart(2, '0')}/${String(day).padStart(
+      2,
+      '0'
+    )}/${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  }
   onSubmit(event: SubmitEvent) {
     event.preventDefault();
     if (this.control.value != '') {
