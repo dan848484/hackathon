@@ -28,7 +28,6 @@ export class ChatComponent implements OnInit {
   dynamicColor:string = "";
   
   operation = "create_meeting";
-  // operation = "AAA";
 
   year = 2022;
   month = 7;
@@ -37,6 +36,7 @@ export class ChatComponent implements OnInit {
   minits = 30
 
   time = `${this.year}/${this.month}/${this.day} ${this.hours}:${this.minits}`;
+  
   onSubmit(event:SubmitEvent){
     event.preventDefault();
     if(this.control.value != "")

@@ -8,9 +8,10 @@ import { StartComponent } from './pages/start/start.component';
 import { ButtonComponent } from './components/button/button.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MenuComponent } from './components/menu/menu.component';
+import { CalendarComponent } from './pages/calendar/calendar.component';
 
 @NgModule({
-  declarations: [AppComponent, ChatComponent, StartComponent, ButtonComponent, MenuComponent],
+  declarations: [AppComponent, ChatComponent, StartComponent, ButtonComponent, MenuComponent, CalendarComponent],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent],
