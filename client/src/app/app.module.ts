@@ -8,17 +8,9 @@ import { StartComponent } from './pages/start/start.component';
 import { ButtonComponent } from './components/button/button.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ChatComponent,
-    StartComponent,
-    ButtonComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  declarations: [AppComponent, ChatComponent, StartComponent, ButtonComponent],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
