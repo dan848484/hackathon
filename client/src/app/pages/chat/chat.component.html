@@ -17,3 +17,8 @@
     <input type="text">
     <button type="submit"><i class="icon-send icon"></i></button>
 </form>
+<div class="chat" *ngFor="let c of chats">
+  {{ c }}
+</div>
+<input type="text" [formControl]="control" />
+<app-button (click)="sendSomething()">何か送って見る</app-button>
