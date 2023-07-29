@@ -17,7 +17,6 @@ export class AppComponent implements OnInit {
     }
     )
     ).subscribe((event:NavigationEnd)=>{
-      
       const currentPage = event.urlAfterRedirects.split("/")[1];
       this.menuOpen = currentPage != "start";
     })

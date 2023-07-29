@@ -1,0 +1,27 @@
+h1{
+    font-size: 40px;
+    margin: 10px;
+}
+.container{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.calendar{
+    width: 14%;
+    height: 100px;
+    text-align: right;
+    border: 1px solid #6db4ff;
+}
+
+.days{
+    width: 14%;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    background-color: #007aff;
+}
