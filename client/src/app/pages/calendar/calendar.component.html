@@ -1,22 +1,27 @@
 <div class="container">
-    <h1>{{ year }}年{{ month }}月</h1>
-    <app-button (click)="previous_month()">
-        <i class="icon-previous"></i>
-    </app-button>
-    <app-button (click)="next_month()">
-        <i class="icon-next"></i>
-    </app-button>
+  <h1>{{ year }}年{{ month }}月</h1>
+  <app-button (click)="previous_month()">
+    <i class="icon-previous"></i>
+  </app-button>
+  <app-button (click)="next_month()">
+    <i class="icon-next"></i>
+  </app-button>
 </div>
 <div>
-    <div class="container">
-        <div class="element days" *ngFor="let day of day_list">
-            <p >{{ day }}</p>
-        </div>
+  <div class="container">
+    <div class="element days" *ngFor="let day of day_list">
+      <p>{{ day }}</p>
     </div>
-    
-    <div class="container">
-        <div *ngFor="let date of date_list" class="calendar">
-            <p>{{ date }}</p>
-        </div>
+  </div>
+
+  <div class="container">
+    <div *ngFor="let date of date_list" class="calendar">
+      <p>{{ date }}</p>
+      <ng-container *ngIf="isNumber(date)">
+        <p *ngFor="let s of schedulesByDate[$any(date) - 1]">
+          {{ getTitleWithTime(s) }}
+        </p>
+      </ng-container>
     </div>
+  </div>
 </div>

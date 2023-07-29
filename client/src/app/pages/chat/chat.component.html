@@ -19,11 +19,6 @@
       <i class="icon-robot icon"></i>
       <div class="aaa-veresion2">
         <p class="Suggestion">Suggestion AI</p>
-<<<<<<< HEAD
-        <div *ngIf="operation == 'create_meeting'; else falseComponent">
-            <p>{{ time }} にミーティングを設定しますか？ 予定に重複はありません。</p>
-            <app-button (click)="create_meeting()"><i class="icon-calendar button"></i> 予定を作成</app-button>
-=======
         <div *ngIf="$any(c).operation == 'create_meeting'; else falseComponent">
           <p>
             {{
@@ -44,10 +39,9 @@
           <ng-template #suggested>
             <p>予定に重複はありません。</p>
           </ng-template>
-          <app-button
+          <app-button (click)="createMeeting($any(c))"
             ><i class="icon-calendar button"></i> 予定を作成</app-button
           >
->>>>>>> fujisaki
         </div>
         <ng-template #falseComponent>
           <!-- <p>予定に重複があるようです。以下の日程が空いています。</p>

@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { CalendarService } from 'src/app/services/calendar.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import {
   ChatMessage,
   OpenaiMessage,
+  Schedule,
   SuggestedScheduleMessage,
 } from 'src/models/app.model';
-
+import { v4 as uuid } from 'uuid';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -14,7 +16,10 @@ import {
 })
 export class ChatComponent implements OnInit {
   chats: (OpenaiMessage | ChatMessage | SuggestedScheduleMessage)[] = [];
-  constructor(private websocketService: WebsocketService) {}
+  constructor(
+    private websocketService: WebsocketService,
+    private calendarService: CalendarService
+  ) {}
   send(value: string) {
     this.websocketService.sendChatMessage(value);
   }
@@ -48,9 +53,30 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  
-  create_meeting(){
-
+  createMeeting(chat: OpenaiMessage | SuggestedScheduleMessage) {
+    const schedule: Schedule = {
+      id: uuid(),
+      title: 'ミーティング',
+      startTime: new Date(
+        chat.year,
+        chat.month - 1,
+        chat.day,
+        chat.hour,
+        chat.minutes
+      ),
+      endTime: new Date(
+        chat.year,
+        chat.month - 1,
+        chat.day,
+        chat.hour + 1,
+        chat.minutes
+      ),
+    };
+    if (!this.websocketService.name) {
+      throw new Error('ユーザー名取得できませんでした');
+    }
+    this.calendarService
+      .postCalendar(this.websocketService.name, schedule)
+      .subscribe();
   }
-
 }

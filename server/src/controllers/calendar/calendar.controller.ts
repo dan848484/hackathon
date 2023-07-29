@@ -19,6 +19,7 @@ export class CalendarController {
       startTime: new Date(body.startTime),
       endTime: new Date(body.endTime),
     };
+    console.log("リクエストがありました");
     return this.calendarService.addSchedule(param.user, schedule);
   }
 }
