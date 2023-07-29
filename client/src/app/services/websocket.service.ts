@@ -16,9 +16,11 @@ export class WebsocketService {
   get message$() {
     return this._message$.asObservable();
   }
+
   constructor() {
     this.connect();
   }
+
   connect() {
     this.connection = new WebSocket('ws://localhost:3000');
     this.connection.onopen = this.onOpen.bind(this);
@@ -50,8 +52,9 @@ export class WebsocketService {
   }
 
   private onMessage(event: MessageEvent<string>) {
-    console.log('受信', event);
+    // console.log('受信', event);
     const data: ChatMessage | OpenaiMessage = JSON.parse(event.data);
+    console.log(data.type, (data as any).targetUser);
     if (
       data.type === 'openai' &&
       data.targetUser[0] === '!' &&
