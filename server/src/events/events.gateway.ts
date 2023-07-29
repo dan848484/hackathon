@@ -7,12 +7,13 @@ import {
   WebSocketGateway,
   WebSocketServer,
   WsResponse,
-} from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
-import { v4 as uuid } from 'uuid';
+} from "@nestjs/websockets";
+import { Server, Socket } from "socket.io";
+import { ChatMessage } from "src/models/app.model";
+import { v4 as uuid } from "uuid";
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: "*",
   },
 })
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -25,12 +26,13 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.wsClients.push(client);
   }
 
-  @SubscribeMessage('message')
+  @SubscribeMessage("message")
   message(
-    @MessageBody() data: string,
-    @ConnectedSocket() client: Socket,
+    @MessageBody() data: ChatMessage,
+    @ConnectedSocket() client: Socket
   ): WsResponse<string> {
-    console.log(data);
+    const name = data.user;
+    const message = data.message;
     this.broadcast(data);
     return null;
   }

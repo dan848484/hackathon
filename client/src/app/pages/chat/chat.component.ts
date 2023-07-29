@@ -11,7 +11,7 @@ export class ChatComponent implements OnInit {
   chats: string[] = [];
   constructor(private websocketService: WebsocketService) {}
   sendSomething() {
-    this.websocketService.send(this.control.value ?? '');
+    this.websocketService.sendChatMessage(this.control.value ?? '');
   }
   control = new FormControl('');
   ngOnInit(): void {
