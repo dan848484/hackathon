@@ -2,27 +2,26 @@ import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
+  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
   WsResponse,
 } from '@nestjs/websockets';
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Server, Socket } from 'socket.io';
-
+import { v4 as uuid } from 'uuid';
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
-export class EventsGateway implements OnGatewayConnection {
+export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
   wsClients: Socket[] = [];
 
-  handleConnection(client: Socket) {
+  handleConnection(client: Socket, ...args: any[]) {
     this.wsClients.push(client);
   }
 
@@ -31,7 +30,7 @@ export class EventsGateway implements OnGatewayConnection {
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
   ): WsResponse<string> {
-    console.log('データ受け取りました', data);
+    console.log(data);
     this.broadcast(data);
     return null;
   }
@@ -41,5 +40,9 @@ export class EventsGateway implements OnGatewayConnection {
     for (let c of this.wsClients) {
       c.send(broadCastMessage);
     }
+  }
+
+  handleDisconnect(client: Socket) {
+    this.wsClients = this.wsClients.filter((client) => client != client);
   }
 }
