@@ -1,4 +1,9 @@
-export interface ChatMessage {
+export interface MessageBase {
+  type: "chat" | "openai";
+}
+
+export interface ChatMessage extends MessageBase {
+  type: "chat";
   user: string;
   message: string;
 }
@@ -19,4 +24,15 @@ export interface ScheduleDto {
 
 export interface ExtractRequest {
   text: string;
+}
+
+export interface OpenaiMessage extends MessageBase {
+  type: "openai";
+  operation: "create_meeting" | "cancel";
+  targetUser?: string; //ユーザー名を格納するんだけれど、先頭に!があったらその人じゃない人って意味にする。
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minutes: number;
 }

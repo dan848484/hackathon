@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { OpenAIClient, AzureKeyCredential } from "@azure/openai";
 import { config } from "dotenv";
+import { OpenaiMessage } from "src/models/app.model";
 config();
 
 @Injectable()
@@ -32,13 +33,14 @@ export class OpenaiService {
     this.azureApiKey = process.env["AZURE_OPENAI_KEY"]!;
   }
 
-  async extractPlanFromText(text: string): Promise<string | undefined> {
+  async extractPlanFromText(text: string): Promise<OpenaiMessage | undefined> {
     try {
       const client = new OpenAIClient(
         this.endpoint,
         new AzureKeyCredential(this.azureApiKey)
       );
       const deploymentId = "testbot";
+      console.log("Azure Open AIのAPIコールを行います。");
       const result = await client.getChatCompletions(deploymentId, [
         ...this.scheduleDefaultPrompt,
         {
@@ -50,7 +52,8 @@ export class OpenaiService {
       for (const choice of result.choices) {
         json = choice.message?.content;
       }
-      return JSON.parse(json);
+      const parsedObject = JSON.parse(json) as OpenaiMessage;
+      return parsedObject;
     } catch (error) {
       console.error(error);
       return undefined;

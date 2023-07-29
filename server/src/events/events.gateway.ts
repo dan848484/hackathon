@@ -9,8 +9,10 @@ import {
   WsResponse,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
-import { ChatMessage } from "src/models/app.model";
+import { ChatMessage, MessageBase, OpenaiMessage } from "src/models/app.model";
+import { OpenaiService } from "src/services/openai/openai.service";
 import { v4 as uuid } from "uuid";
+
 @WebSocketGateway({
   cors: {
     origin: "*",
@@ -24,20 +26,56 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleConnection(client: Socket, ...args: any[]) {
     this.wsClients.push(client);
+    console.log("接続開始時の接続数", this.wsClients.length);
   }
+
+  constructor(private openaiService: OpenaiService) {}
 
   @SubscribeMessage("message")
   message(
-    @MessageBody() data: ChatMessage,
+    @MessageBody() data: MessageBase,
     @ConnectedSocket() client: Socket
   ): WsResponse<string> {
-    const name = data.user;
-    const message = data.message;
-    this.broadcast(data);
+    console.log("接続数", this.wsClients.length);
+
+    switch (data.type) {
+      case "chat":
+        const chatMessage: ChatMessage = data as ChatMessage;
+        const name = chatMessage.user;
+        const message = chatMessage.message;
+        this.broadcast(chatMessage);
+        //日付に関係してそうな言葉がテキスト中に含まれていたら、
+        if (
+          message.match(/\d+\/\d+/g) ||
+          message.match(/\d+日/g) ||
+          message.includes("明日") ||
+          message.includes("明後日")
+        ) {
+          (async () => {
+            const extractedData = await this.openaiService.extractPlanFromText(
+              message
+            );
+            if (!extractedData) {
+              console.log(
+                "日付情報の取得を試みましたが、うまくいかなかったようです。"
+              );
+              return null;
+            }
+            extractedData.type = "openai";
+            extractedData.targetUser = "!" + name;
+            this.broadcast(extractedData);
+          })();
+        }
+        break;
+      case "openai":
+        const openaiMessage: OpenaiMessage = data as OpenaiMessage;
+        //ここで何かやる
+        break;
+    }
     return null;
   }
 
-  private broadcast(message: any) {
+  private broadcast(message: MessageBase) {
     const broadCastMessage = JSON.stringify(message);
     for (let c of this.wsClients) {
       c.send(broadCastMessage);
@@ -45,6 +83,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
-    this.wsClients = this.wsClients.filter((client) => client != client);
+    console.log("接続終了時の接続数（削除前）", this.wsClients.length);
+    this.wsClients = this.wsClients.filter((c) => client != c);
+    console.log("接続終了時の接続数（終了後）", this.wsClients.length);
   }
 }
