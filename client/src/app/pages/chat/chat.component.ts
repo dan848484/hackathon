@@ -43,4 +43,10 @@ export class ChatComponent implements OnInit {
       this.control.setValue('');
     }
   }
+
+  
+  create_meeting(){
+
+  }
+
 }

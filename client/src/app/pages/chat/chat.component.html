@@ -12,7 +12,7 @@
         <p class="Suggestion">Suggestion AI</p>
         <div *ngIf="operation == 'create_meeting'; else falseComponent">
             <p>{{ time }} にミーティングを設定しますか？ 予定に重複はありません。</p>
-            <app-button><i class="icon-calendar button"></i> 予定を作成</app-button>
+            <app-button (click)="create_meeting()"><i class="icon-calendar button"></i> 予定を作成</app-button>
         </div>
         <ng-template #falseComponent>
             <p>予定に重複があるようです。以下の日程が空いています。</p>
