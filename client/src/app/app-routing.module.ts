@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'start', pathMatch: 'full' },
   { path: 'chat', component: ChatComponent, canActivate: [SetupGuard] },
   { path: 'start', component: StartComponent },
-  { path: 'calendar', component: CalendarComponent },
+  { path: 'calendar', component: CalendarComponent, canActivate: [SetupGuard] },
 ];
 
 @NgModule({
