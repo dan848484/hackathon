@@ -8,14 +8,14 @@ h1{
 }
 
 .calendar{
-    width: 14%;
+    width: 14.28%;
     height: 100px;
     text-align: right;
     border: 1px solid #6db4ff;
 }
 
 .days{
-    width: 14%;
+    width: 14.28%;
     height: 30px;
 
     display: flex;
@@ -24,4 +24,15 @@ h1{
 
     color: white;
     background-color: #007aff;
+}
+
+.aaa{
+    align-items: center;
+}
+
+app-button{
+    border-radius: 5px;
+    margin: 2px;
+    width: auto;
+    height: auto;
 }

@@ -36,8 +36,13 @@ export class CalendarComponent implements OnInit {
   }
 
   day_list = ['日', '月', '火', '水', '木', '金', '土'];
-  year = 2023;
-  month = 7;
+  
+  // year = 2023;
+  // month = 7;
+
+  now = new Date;
+  year = this.now.getFullYear();
+  month = this.now.getMonth() + 1;
 
   last_day: number = 0;
   date = new Date();
