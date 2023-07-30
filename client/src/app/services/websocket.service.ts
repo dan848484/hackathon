@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
   ChatMessage,
+  ConfirmScheduleMessage,
+  CreatedScheduleMessage,
+  CreatedScheduleMessageDto,
   OpenaiMessage,
+  Schedule,
   SuggestedScheduleMessage,
 } from 'src/models/app.model';
 
@@ -13,7 +17,12 @@ export class WebsocketService {
   isConnected: boolean = false;
   public connection?: WebSocket;
   private _message$ = new Subject<
-    MessageEvent<OpenaiMessage | ChatMessage | SuggestedScheduleMessage>
+    MessageEvent<
+      | OpenaiMessage
+      | ChatMessage
+      | SuggestedScheduleMessage
+      | CreatedScheduleMessage
+    >
   >();
   private _name?: string;
   get name() {
@@ -59,8 +68,12 @@ export class WebsocketService {
 
   private onMessage(event: MessageEvent<string>) {
     console.log('受信', event);
-    const data: ChatMessage | OpenaiMessage | SuggestedScheduleMessage =
-      JSON.parse(event.data);
+    const data:
+      | ChatMessage
+      | OpenaiMessage
+      | SuggestedScheduleMessage
+      | CreatedScheduleMessageDto = JSON.parse(event.data);
+
     if (
       (data.type === 'openai' || data.type === 'suggested_schedule') &&
       data.targetUser[0] === '!' &&
@@ -68,7 +81,15 @@ export class WebsocketService {
     ) {
       console.log('受け取らないイベント', event);
     } else {
-      this._message$.next({ ...event, data });
+      if (data.type === 'created_schedule') {
+        const createdMessage: CreatedScheduleMessage = {
+          type: 'created_schedule',
+          date: new Date(data.date),
+        };
+        this._message$.next({ ...event, data: createdMessage });
+      } else {
+        this._message$.next({ ...event, data });
+      }
     }
     this.isConnected = false;
   }
@@ -79,6 +100,16 @@ export class WebsocketService {
       message: value,
     };
     this.connection?.send(JSON.stringify({ event: 'message', data: chatMsg }));
+  }
+
+  confirmMessage(schedule: Schedule) {
+    const confirmMessage: ConfirmScheduleMessage = {
+      type: 'confirm_schedule',
+      date: schedule.startTime,
+    };
+    this.connection?.send(
+      JSON.stringify({ event: 'message', data: confirmMessage })
+    );
   }
 
   registerUserName(name: string) {

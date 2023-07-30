@@ -4,6 +4,7 @@ import { CalendarService } from 'src/app/services/calendar.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import {
   ChatMessage,
+  CreatedScheduleMessage,
   OpenaiMessage,
   Schedule,
   SuggestedScheduleMessage,
@@ -15,7 +16,12 @@ import { v4 as uuid } from 'uuid';
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit {
-  chats: (OpenaiMessage | ChatMessage | SuggestedScheduleMessage)[] = [];
+  chats: (
+    | OpenaiMessage
+    | ChatMessage
+    | SuggestedScheduleMessage
+    | CreatedScheduleMessage
+  )[] = [];
   constructor(
     private websocketService: WebsocketService,
     private calendarService: CalendarService
@@ -52,7 +58,6 @@ export class ChatComponent implements OnInit {
       this.control.setValue('');
     }
   }
-
   createMeeting(chat: OpenaiMessage | SuggestedScheduleMessage) {
     const schedule: Schedule = {
       id: uuid(),
@@ -75,8 +80,6 @@ export class ChatComponent implements OnInit {
     if (!this.websocketService.name) {
       throw new Error('ユーザー名取得できませんでした');
     }
-    this.calendarService
-      .postCalendar(this.websocketService.name, schedule)
-      .subscribe();
+    this.calendarService.postCalendar(schedule);
   }
 }

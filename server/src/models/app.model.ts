@@ -1,5 +1,10 @@
 export interface MessageBase {
-  type: "chat" | "openai" | "suggested_schedule";
+  type:
+    | "chat"
+    | "openai"
+    | "suggested_schedule"
+    | "confirm_schedule"
+    | "created_schedule";
 }
 
 export interface ChatMessage extends MessageBase {
@@ -41,4 +46,23 @@ export interface SuggestedScheduleMessage
   extends Omit<OpenaiMessage, "type" | "operation"> {
   type: "suggested_schedule";
   operation: "create_meeting";
+}
+
+export interface ConfirmScheduleMessage extends MessageBase {
+  type: "confirm_schedule";
+  date: Date;
+}
+
+export interface ConfirmScheduleMessageDto extends MessageBase {
+  type: "confirm_schedule";
+  date: string;
+}
+
+export interface CreatedScheduleMessage extends MessageBase {
+  type: "created_schedule";
+  date: Date;
+}
+export interface CreatedScheduleMessageDto extends MessageBase {
+  type: "created_schedule";
+  date: string;
 }

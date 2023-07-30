@@ -14,12 +14,13 @@
       <p>{{ c.message }}</p>
     </div>
   </div>
+
   <ng-template #openai>
     <div class="container AI">
       <i class="icon-robot icon"></i>
       <div class="aaa-veresion2">
         <p class="Suggestion">Suggestion AI</p>
-        <div *ngIf="$any(c).operation == 'create_meeting'; else falseComponent">
+        <div *ngIf="$any(c).operation == 'create_meeting'">
           <p>
             {{
               getDateString(
@@ -43,12 +44,9 @@
             ><i class="icon-calendar button"></i> 予定を作成</app-button
           >
         </div>
-        <ng-template #falseComponent>
-          <!-- <p>予定に重複があるようです。以下の日程が空いています。</p>
-          <p>・{{ time }}</p>
-          <p>・{{ time }}</p>
-          <p>・{{ time }}</p> -->
-        </ng-template>
+        <div *ngIf="c.type === 'created_schedule'">
+          {{ $any(c).date.toISOString() }}で登録しました。
+        </div>
       </div>
     </div>
   </ng-template>

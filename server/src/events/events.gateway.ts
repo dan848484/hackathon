@@ -13,11 +13,15 @@ import { nobuCalendar } from "mockData/nobu";
 import { Server, Socket } from "socket.io";
 import {
   ChatMessage,
+  ConfirmScheduleMessage,
+  ConfirmScheduleMessageDto,
+  CreatedScheduleMessage,
   MessageBase,
   OpenaiMessage,
   Schedule,
   SuggestedScheduleMessage,
 } from "src/models/app.model";
+import { CalendarService } from "src/services/calendar/calendar.service";
 import { OpenaiService } from "src/services/openai/openai.service";
 import { v4 as uuid } from "uuid";
 
@@ -37,7 +41,10 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log("接続開始時の接続数", this.wsClients.length);
   }
 
-  constructor(private openaiService: OpenaiService) {}
+  constructor(
+    private openaiService: OpenaiService,
+    private calendarService: CalendarService
+  ) {}
 
   @SubscribeMessage("message")
   message(
@@ -52,7 +59,6 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const name = chatMessage.user;
         const message = chatMessage.message;
         this.broadcast(chatMessage);
-        console.log(message);
         //日付に関係してそうな言葉がテキスト中に含まれていたら、
         if (
           message.match(/\d+\/\d+/g) ||
@@ -123,9 +129,26 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
           })();
         }
         break;
-      case "openai":
-        const openaiMessage: OpenaiMessage = data as OpenaiMessage;
-        //ここで何かやる
+      case "confirm_schedule":
+        const confirmMessageDto: ConfirmScheduleMessageDto =
+          data as ConfirmScheduleMessageDto;
+        const confirmMessage: ConfirmScheduleMessage = {
+          type: "confirm_schedule",
+          date: new Date(confirmMessageDto.date),
+        };
+        const schedule: Schedule = {
+          id: uuid(),
+          title: "ミーティング",
+          startTime: confirmMessage.date,
+          endTime: new Date(confirmMessage.date.getTime() + 1000 * 60 * 60),
+        };
+        this.calendarService.addSchedule("dan", schedule);
+        this.calendarService.addSchedule("nobu", schedule);
+        const createdScheduleMessage: CreatedScheduleMessage = {
+          type: "created_schedule",
+          date: schedule.startTime,
+        };
+        this.broadcast(createdScheduleMessage);
         break;
     }
     return null;
