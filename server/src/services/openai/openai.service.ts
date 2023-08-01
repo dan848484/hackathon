@@ -16,7 +16,7 @@ export class OpenaiService {
 	operationはcreate_meetingまたはcancelが入ります。
 	year,month,day,hour,minutesはわかる範囲で書いてください。	
 	以下が作ってもらいたいJSONの型です。JSONのみ出力してください。他の情報は入りません。ただ、全くミーティングに関係ない場合はnullと出力してください。
-	year,month,day,hour,minutesの中でnullになるものは現在の日付として埋めてください。現在の日付${new Date().toISOString()}
+	year,month,day,hour,minutesの中でnullになるものは現在の日付として埋めてください。現在の日付${new Date().toString()}
 	interface ChatGptResponse{
 		operation:'create_meeting' | 'cancel';
 		year:number,
