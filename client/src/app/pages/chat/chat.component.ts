@@ -1,3 +1,4 @@
+import { state, style, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CalendarService } from 'src/app/services/calendar.service';
@@ -14,6 +15,15 @@ import { v4 as uuid } from 'uuid';
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
+  animations:[trigger('appear',[
+    state('unvisible',style({
+      opacity:0
+    })),
+    state('unvisible',style({
+      opacity:0
+    })),
+
+  ])]
 })
 export class ChatComponent implements OnInit {
   chats: (
@@ -51,6 +61,16 @@ export class ChatComponent implements OnInit {
       '0'
     )}/${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
   }
+
+  getDateStringFromDateObj(date: Date) {
+    return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}/${String(date.getDate()).padStart(2, '0')}/${String(
+      date.getHours()
+    ).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  }
+
   onSubmit(event: SubmitEvent) {
     event.preventDefault();
     if (this.control.value != '') {
